@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
+    "@adiwajshing/baileys": "^4.4.0",
     "@hapi/boom": "^10.0.1",
     "bluebird": "^3.7.2",
     "caliph-api": "^1.0.0",

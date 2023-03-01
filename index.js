@@ -81,13 +81,20 @@ const start = async () => {
 			// chats
 			const { bodi } = msg;
 			chat = bodi.toLowerCase();
+			const args = bodi.trim().split(/ +/).slice(1);
 			const { from } = msg;
 
 			if (chat.startsWith("pin")) {
 				try {
-					query = chat.split(" ")[1];
+					query = args.join(" ");
+					console.log(query);
 					res = await api.search.pin(query);
-					msg.reply(`Pinterest Searching With Query \n${query}`);
+					await msg.reply(`Pinterest Searching With Query \n*${query}*`);
+					// if (res.length) {
+					// 	resone = await fetch(res[0]);
+					// 	pictone = await resone.buffer();
+					// 	await sock.sendMessage(from, { image: pictone }, { quoted: msg });
+					// }
 					msg.reply(`*${res.length}* Result Obtained`);
 					for (let link of res) {
 						try {
