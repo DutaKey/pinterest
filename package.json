@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@adiwajshing/baileys": "^5.0.0",
+    "@hapi/boom": "^10.0.1",
+    "bluebird": "^3.7.2",
+    "caliph-api": "^1.0.0",
+    "node-fetch": "^2.6.7",
+    "pino": "^8.11.0",
+    "pinterest-node-api": "^0.0.7",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
