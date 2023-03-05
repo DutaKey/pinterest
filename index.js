@@ -87,45 +87,72 @@ const start = async () => {
 			if (chat.startsWith("pin")) {
 				try {
 					query = args.join(" ");
-					console.log(query);
-					res = await api.search.pin(query);
-					await msg.reply(`Pinterest Searching With Query \n*${query}*`);
-					// if (res.length) {
-					// 	resone = await fetch(res[0]);
-					// 	pictone = await resone.buffer();
-					// 	await sock.sendMessage(from, { image: pictone }, { quoted: msg });
-					// }
-					msg.reply(`*${res.length}* Result Obtained`);
-					for (let link of res) {
-						try {
-							console.log("get link");
-							ser = await fetch(link);
-							console.log("fetch done");
-							bubu = await ser.buffer();
-							await sock.sendMessage(from, { image: bubu }, { quoted: msg });
-							console.log("done");
-						} catch (e) {
-							msg.reply(e.message);
-							console.log(e.message);
-							return;
-						}
+					if (query.includes("|")) {
+						query = args.join(" ").split("|")[0];
 					}
-					// if (chat.includes("|")) {
-					// 	banyaknya = chat.split("|")[1];
-					// 	for (let i = 0; i < banyaknya; i++) {
-					// 		ser = await fetch(
-					// 			`https://saipulanuar.ga/api/pinterest?query=${res}&apikey=APIKEY`
-					// 		);
-					// 		bubu = await ser.buffer();
-					// 		await sock.sendMessage(from, { image: bubu }, { quoted: msg });
-					// 	}
-					// } else {
-					// 	ser = await fetch(
-					// 		`https://saipulanuar.ga/api/pinterest?query=${res}&apikey=APIKEY`
-					// 	);
-					// 	bubu = await ser.buffer();
-					// 	await sock.sendMessage(from, { image: bubu });
-					// }
+					console.log(query);
+					result = await api.search.pin(query);
+					res = result;
+					if (chat.includes("|")) {
+						banyaknya = chat.split("|")[1];
+						if (banyaknya.includes("all")) {
+							for (let i = 0; i < res.length; i++) {
+								try {
+									link = res[i];
+									ser = await fetch(link);
+									bubu = await ser.buffer();
+									await sock.sendMessage(
+										from,
+										{ image: bubu },
+										{ quoted: msg }
+									);
+								} catch (e) {
+									console.log(e.message);
+									msg.reply(`failed to send the ${i + 1}th photo`);
+								}
+							}
+						} else {
+							for (let i = 0; i < banyaknya; i++) {
+								try {
+									link = res[i];
+									ser = await fetch(link);
+									bubu = await ser.buffer();
+									await sock.sendMessage(
+										from,
+										{ image: bubu },
+										{ quoted: msg }
+									);
+								} catch (e) {
+									console.log(e.message);
+									msg.reply(`failed to send the ${i + 1}th photo`);
+								}
+							}
+						}
+						await sock.sendMessage(
+							from,
+							{ text: `Success Send ${banyaknya} Pict From Query ${query}` },
+							{ quoted: msg }
+						);
+					} else {
+						await msg.reply(`Pinterest Searching With Query \n*${query}*`);
+						resone = await fetch(res[Math.floor(Math.random() * res.length)]);
+						pictone = await resone.buffer();
+						text =
+							`*${res.length}* Result Obtained\n\nif you want to get more you can with\n` +
+							"``` pin " +
+							query +
+							" | " +
+							"<much desired>" +
+							"```\n" +
+							"or want to get it all with\n" +
+							"``` pin " +
+							query +
+							" | " +
+							"all" +
+							"```";
+						await msg.reply(text);
+						await sock.sendMessage(from, { image: pictone }, { quoted: msg });
+					}
 				} catch (e) {
 					msg.reply(e.message);
 					console.log(e.message);
